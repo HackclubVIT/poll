@@ -1,9 +1,7 @@
 const { createClient } = supabase;
 
-const _supabase = createClient(
-  "https://chgbsifxtupobribzviz.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNoZ2JzaWZ4dHVwb2JyaWJ6dml6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2Nzc1MjA3MjQsImV4cCI6MTk5MzA5NjcyNH0.NMdoTHmsyUrQsNwN8EUm5srF7NZ8O4uu0_95tsSovhk"
-  );
+const _supabase = createClient(config.SUPABASE_URL, config.API_KEY);
+
 
 async function insert() {
   const { data, error } = await _supabase.from("participants").insert([
@@ -39,10 +37,26 @@ async function dispData(nameList, instaList, regNoList) {
 
 for (let i=0;i<buttons.length;i++){
   buttons[i].addEventListener("click", function(){
-      let regno = buttons[i].getAttribute("data-regno");
-      update_votes(regno);
+      let regno = buttons[i].getAttribute("data-regno")
+      let vote_status = buttons[i].getAttribute("data-voted")
+      if (vote_status == 0){
+        update_votes(regno)
+        buttons[i].setAttribute("data-voted",1)
+        buttons[i].textContent = "REMOVE VOTE"
+      }else if(vote_status == 1){
+        remove_votes(regno)
+        buttons[i].setAttribute("data-voted",0)
+        buttons[i].textContent = "VOTE"
+      }
   })
 }
+
+async function remove_votes(reg_no){
+  const { data, error } = await _supabase.rpc( 'remove_vote', {
+    quote_id: reg_no, increment_num: 1
+  } )
+}
+
 
 async function update_votes(reg_no){
   const { data, error } = await _supabase.rpc( 'vote', {
