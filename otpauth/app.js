@@ -20,8 +20,3 @@ async function authotp() {
     })
 };
 
-
-async function signout() {
-    const { error } = await _supabase.auth.signOut()
-};
-

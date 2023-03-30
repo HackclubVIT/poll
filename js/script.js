@@ -91,6 +91,39 @@ async function displayImage() {
 
 displayImage();
 
+const {
+  data: { session },
+} = await _supabase.auth.getSession()
+
+const handle = session => {
+  // do whatever you want to do when auth state changes
+ // For login, maybe you want to set navbar profile name
+ // For logout you wanna remove it maybe, here I'll just console log
+ if(session?.user['aud'] == 'authenticated'){
+  const pic = document.getElementsByClassName('profile-pic')[0]
+  pic.setAttribute('src', session?.user['identities'][0]['identity_data']['avatar_url'])
+  document.getElementsByClassName('login')[0].remove()
+  console.log(session?.user);
+ }else {
+  document.getElementsByClassName('profile')[0].remove()
+  document.getElementsByClassName('logout')[0].remove()
+ }
+
+}
+
+handle(session)
+
+async function signout() {
+  const { error } = await _supabase.auth.signOut() 
+  console.log(error)
+};
+
+_supabase.auth.onAuthStateChange((_, session) => handle(session));
+
+
+
+
+
 // console.log(_supabase);
 
 // async function downloadPic() {
