@@ -56,7 +56,7 @@ async function remove_votes(reg_no) {
     quote_id: reg_no,
     increment_num: 1,
   });
-  alert("Unvoted" + reg_no);
+  alert("Unvoted " + reg_no);
 }
 
 async function update_votes(reg_no) {
@@ -65,11 +65,7 @@ async function update_votes(reg_no) {
       quote_id: reg_no,
       increment_num: 1,
     });
-    const { data2, error2 } = await _supabase.rpc("vote_config_insert", {
-      email: session.user.email,
-      participant_regno: reg_no,
-    });
-    alert("You voted" + reg_no);
+    alert("You voted " + reg_no);
   }
   else {
     alert("Sign in to vote first!");
