@@ -40,7 +40,9 @@ for (let i = 0; i < buttons.length; i++) {
     if (vote_status == 0) {
       update_votes(regno);
       buttons[i].setAttribute("data-voted", 1);
-      buttons[i].textContent = "REMOVE VOTE";
+      if (session?.user['aud'] == 'authenticated') {
+        buttons[i].textContent = "REMOVE VOTE";
+      }
     } else if (vote_status == 1) {
       remove_votes(regno);
       buttons[i].setAttribute("data-voted", 0);
@@ -54,13 +56,20 @@ async function remove_votes(reg_no) {
     quote_id: reg_no,
     increment_num: 1,
   });
+  alert("Unvoted " + reg_no);
 }
 
 async function update_votes(reg_no) {
-  const { data, error } = await _supabase.rpc("vote", {
-    quote_id: reg_no,
-    increment_num: 1,
-  });
+  if (session?.user['aud'] == 'authenticated') {
+    const { data, error } = await _supabase.rpc("vote", {
+      quote_id: reg_no,
+      increment_num: 1,
+    });
+    alert("You voted " + reg_no);
+  }
+  else {
+    alert("Sign in to vote first!");
+  }
 }
 
 async function getData() {
@@ -74,6 +83,7 @@ async function getData() {
     insta_id.push(data[ele]["insta_id"]);
     reg_no.push(data[ele]["reg_no"]);
   }
+  console.log(name);
   dispData(name, insta_id, reg_no);
 }
 
@@ -116,6 +126,7 @@ handle(session)
 async function signout() {
   const { error } = await _supabase.auth.signOut() 
   console.log(error)
+  location.reload();
 };
 
 _supabase.auth.onAuthStateChange((_, session) => handle(session));
@@ -152,3 +163,5 @@ _supabase.auth.onAuthStateChange((_, session) => handle(session));
 // }
 
 // getDetailsOfBucket();
+
+window.signout = signout;
