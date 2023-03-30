@@ -40,7 +40,9 @@ for (let i = 0; i < buttons.length; i++) {
     if (vote_status == 0) {
       update_votes(regno);
       buttons[i].setAttribute("data-voted", 1);
-      buttons[i].textContent = "REMOVE VOTE";
+      if (session?.user['aud'] == 'authenticated') {
+        buttons[i].textContent = "REMOVE VOTE";
+      }
     } else if (vote_status == 1) {
       remove_votes(regno);
       buttons[i].setAttribute("data-voted", 0);
@@ -57,10 +59,15 @@ async function remove_votes(reg_no) {
 }
 
 async function update_votes(reg_no) {
-  const { data, error } = await _supabase.rpc("vote", {
-    quote_id: reg_no,
-    increment_num: 1,
-  });
+  if (session?.user['aud'] == 'authenticated') {
+    const { data, error } = await _supabase.rpc("vote", {
+      quote_id: reg_no,
+      increment_num: 1,
+    });
+  }
+  else {
+    alert("Sign in to vote first!");
+  }
 }
 
 async function getData() {
