@@ -22,15 +22,108 @@ img {
   box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.5);
 }
 
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+.navbar-links ul {
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
+.navbar-links li {
+  list-style: none;
+  margin-right: 20px;
+}
+
 .title {
   font-size: 1.5em;
   font-weight: bold;
   margin: 0;
-  padding: 2rem;
-  /* text-align: center; */
-  padding-top: 2rem;
-  padding-bottom: 2rem;
+  padding-left: 2rem;
+  padding-bottom: 1.5rem;
+  padding-top: 1.5rem;
   color: white;
+}
+
+.profile-pic {
+  display: block;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 1rem;
+
+}
+
+/* Hamburger menu */
+
+.toggle-button {
+  position: absolute;
+  top: 2rem;
+  right: 1rem;
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 34px;
+  height: 25px;
+}
+
+.toggle-button .bar {
+  width: 100%;
+  height: 3px;
+  background-color: #fca311;
+  border-radius: 10px;
+}
+
+@media (max-width: 768px) {
+  .toggle-button {
+    display: flex;
+  }
+  .navbar-links {
+    display: none;
+    width: 100%;
+  }
+
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .navbar-links ul {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .navbar-links li {
+    display: flex;
+    justify-content: center;
+  }
+
+  .navbar-links li a {
+    padding: 0.5rem 1rem;
+  }
+
+  .navbar-links.active {
+    display: flex;
+  }
+  
+  .container.active {
+    margin-top: 140px;
+  }
+
+  .title {
+    width: 100%;
+    text-align: center;
+  }
+
 }
 
 .btn-wrapper {
@@ -42,9 +135,6 @@ img {
 }
 
 .detail {
-  /* color: white; */
-  /* border-radius: 0 0 20px 20px; */
-  /* background-image: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%); */
   padding: 3%;
   padding-bottom: 2%;
   text-align: center;
@@ -73,7 +163,8 @@ img {
   background-color: #fff;
   border-radius: 20px;
   border-style: none;
-  box-shadow: rgba(0, 0, 0, 0.2) 0 3px 5px -1px, rgba(0, 0, 0, 0.14) 0 6px 10px 0, rgba(0, 0, 0, 0.12) 0 1px 18px 0;
+  box-shadow: rgba(0, 0, 0, 0.2) 0 3px 5px -1px,
+    rgba(0, 0, 0, 0.14) 0 6px 10px 0, rgba(0, 0, 0, 0.12) 0 1px 18px 0;
   box-sizing: border-box;
   color: #3c4043;
   cursor: pointer;
@@ -92,8 +183,8 @@ img {
   position: relative;
   text-align: center;
   text-transform: none;
-  transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1), opacity 15ms linear 30ms,
-    transform 270ms cubic-bezier(0, 0, 0.2, 1) 0ms;
+  transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 15ms linear 30ms, transform 270ms cubic-bezier(0, 0, 0.2, 1) 0ms;
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
@@ -108,7 +199,8 @@ img {
 }
 
 .vote-btn:active {
-  box-shadow: 0 4px 4px 0 rgb(60 64 67 / 30%), 0 8px 12px 6px rgb(60 64 67 / 15%);
+  box-shadow: 0 4px 4px 0 rgb(60 64 67 / 30%),
+    0 8px 12px 6px rgb(60 64 67 / 15%);
   outline: none;
 }
 
@@ -118,23 +210,28 @@ img {
 }
 
 .vote-btn:not(:disabled) {
-  box-shadow: rgba(60, 64, 67, 0.3) 0 1px 3px 0, rgba(60, 64, 67, 0.15) 0 4px 8px 3px;
+  box-shadow: rgba(60, 64, 67, 0.3) 0 1px 3px 0,
+    rgba(60, 64, 67, 0.15) 0 4px 8px 3px;
 }
 
 .vote-btn:not(:disabled):hover {
-  box-shadow: rgba(60, 64, 67, 0.3) 0 2px 3px 0, rgba(60, 64, 67, 0.15) 0 6px 10px 4px;
+  box-shadow: rgba(60, 64, 67, 0.3) 0 2px 3px 0,
+    rgba(60, 64, 67, 0.15) 0 6px 10px 4px;
 }
 
 .vote-btn:not(:disabled):focus {
-  box-shadow: rgba(60, 64, 67, 0.3) 0 1px 3px 0, rgba(60, 64, 67, 0.15) 0 4px 8px 3px;
+  box-shadow: rgba(60, 64, 67, 0.3) 0 1px 3px 0,
+    rgba(60, 64, 67, 0.15) 0 4px 8px 3px;
 }
 
 .vote-btn:not(:disabled):active {
-  box-shadow: rgba(60, 64, 67, 0.3) 0 4px 4px 0, rgba(60, 64, 67, 0.15) 0 8px 12px 6px;
+  box-shadow: rgba(60, 64, 67, 0.3) 0 4px 4px 0,
+    rgba(60, 64, 67, 0.15) 0 8px 12px 6px;
 }
 
 .vote-btn:disabled {
-  box-shadow: rgba(60, 64, 67, 0.3) 0 1px 3px 0, rgba(60, 64, 67, 0.15) 0 4px 8px 3px;
+  box-shadow: rgba(60, 64, 67, 0.3) 0 1px 3px 0,
+    rgba(60, 64, 67, 0.15) 0 4px 8px 3px;
 }
 
 .row {
@@ -146,4 +243,8 @@ img {
 
 .text-center {
   text-align: center;
+}
+
+.container {
+  padding-top: 110px;
 }
