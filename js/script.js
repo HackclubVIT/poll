@@ -65,7 +65,7 @@ async function update_votes(reg_no) {
       quote_id: reg_no,
       increment_num: 1,
     });
-    const { data2, error2 } = await _supabase.rpc("vote_config", {
+    const { data2, error2 } = await _supabase.rpc("vote_config_insert", {
       email: session.user.email,
       participant_regno: reg_no,
     });
