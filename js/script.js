@@ -116,6 +116,7 @@ handle(session)
 async function signout() {
   const { error } = await _supabase.auth.signOut() 
   console.log(error)
+  location.reload();
 };
 
 _supabase.auth.onAuthStateChange((_, session) => handle(session));
@@ -152,3 +153,5 @@ _supabase.auth.onAuthStateChange((_, session) => handle(session));
 // }
 
 // getDetailsOfBucket();
+
+window.signout = signout;
