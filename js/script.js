@@ -56,6 +56,7 @@ async function remove_votes(reg_no) {
     quote_id: reg_no,
     increment_num: 1,
   });
+  alert("Unvoted" + reg_no);
 }
 
 async function update_votes(reg_no) {
@@ -64,6 +65,11 @@ async function update_votes(reg_no) {
       quote_id: reg_no,
       increment_num: 1,
     });
+    const { data2, error2 } = await _supabase.rpc("vote_config", {
+      email: session.user.email,
+      participant_regno: reg_no,
+    });
+    alert("You voted" + reg_no);
   }
   else {
     alert("Sign in to vote first!");
@@ -81,6 +87,7 @@ async function getData() {
     insta_id.push(data[ele]["insta_id"]);
     reg_no.push(data[ele]["reg_no"]);
   }
+  console.log(name);
   dispData(name, insta_id, reg_no);
 }
 
