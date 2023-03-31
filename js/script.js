@@ -67,16 +67,31 @@ async function remove_votes(reg_no) {
 
 async function update_votes(reg_no) {
   if (session?.user['aud'] == 'authenticated') {
+
+    let temp = session?.user
+    const { data:data4, error4 } = await _supabase
+  .from('votes')
+  .select('email')
+  let j = 0
+  console.log(data4)
+  for (let i in data4){
+    console.log(i)
+    if (data4[i].email == temp.email) {
+       j = 1
+    }
+  }
+    if (j == 0){
     const { data, error } = await _supabase.rpc("vote", {
       quote_id: reg_no,
       increment_num: 1,
     });
     alert("You voted " + reg_no);
-    let temp = session?.user
     const { data1, error1 } = await _supabase.rpc("votetable", {
       email: temp.email,
       regno: reg_no,
-    });
+    }); }else{
+      alert("You already voted")
+    }
 
   }
   else {
