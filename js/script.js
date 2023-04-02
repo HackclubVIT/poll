@@ -12,6 +12,7 @@ async function insert() {
 let buttons = document.getElementsByClassName("vote-btn");
 
 async function dispData(nameList, instaList, regNoList) {
+  
   const divs = document.getElementsByClassName("detail");
   for (var i = 0; i < nameList.length; i++) {
     const name = document.createElement("p");
@@ -33,10 +34,12 @@ async function dispData(nameList, instaList, regNoList) {
   }
 }
 
+
 for (let i = 0; i < buttons.length; i++) {
   buttons[i].addEventListener("click", function () {
     let regno = buttons[i].getAttribute("data-regno");
     let vote_status = buttons[i].getAttribute("data-voted");
+    
     if (vote_status == 0) {
       update_votes(regno);
       buttons[i].setAttribute("data-voted", 1);
