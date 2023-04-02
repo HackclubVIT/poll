@@ -1,6 +1,10 @@
 const { createClient } = supabase;
 
 const _supabase = createClient(config.SUPABASE_URL, config.API_KEY);
+const {
+  data: { session },
+} = await _supabase.auth.getSession()
+
 
 async function insert() {
   const { data, error } = await _supabase.from("participants").insert([
@@ -34,32 +38,78 @@ async function dispData(nameList, instaList, regNoList) {
   }
 }
 
+const { data:data3, error3 } = await _supabase.rpc("getvote", {
+  email_id: session.user.email
+});
 
 for (let i = 0; i < buttons.length; i++) {
   buttons[i].addEventListener("click", function () {
     let regno = buttons[i].getAttribute("data-regno");
     let vote_status = buttons[i].getAttribute("data-voted");
-    
     if (vote_status == 0) {
       update_votes(regno);
       buttons[i].setAttribute("data-voted", 1);
       if (session?.user['aud'] == 'authenticated') {
         buttons[i].textContent = "REMOVE VOTE";
+        for (let j = 0; j < buttons.length; j++) {
+          if (i != j)
+            buttons[j].disabled = true;
+        }
       }
     } else if (vote_status == 1) {
       remove_votes(regno);
       buttons[i].setAttribute("data-voted", 0);
       buttons[i].textContent = "VOTE";
+      for (let j = 0; j < buttons.length; j++) {
+        if (i != j)
+          buttons[j].disabled = false;
+      }
     }
   });
 }
 
+async function restrictVote() {
+  const regNos = document.getElementsByClassName("participant-reg-no");
+  const { data:data3, error3 } = await _supabase.rpc("getvote", {
+    email_id: session.user.email
+  });
+
+  for (let i = 0; i < regNos.length; i++) {
+    if (regNos[i].innerHTML == data3) {
+      buttons[i].textContent = "REMOVE VOTE";
+      buttons[i].addEventListener("click", function () {
+        let regno = buttons[i].getAttribute("data-regno");
+        let vote_status = buttons[i].getAttribute("data-voted");
+        
+        if (vote_status == 0) {
+          update_votes(regno);
+          buttons[i].setAttribute("data-voted", 1);
+          if (session?.user['aud'] == 'authenticated') {
+            buttons[i].textContent = "REMOVE VOTE";
+          }
+        } else if (vote_status == 1) {
+          remove_votes(regno);
+          buttons[i].setAttribute("data-voted", 0);
+          buttons[i].textContent = "VOTE";
+        }
+      });
+    }
+    else if (data3) {
+      buttons[i].disabled=true;
+    }
+  }
+}
+
 async function remove_votes(reg_no) {
+  if (!session) {
+    alert("Sign in to vote first!");
+    return;
+  }
   const { data, error } = await _supabase.rpc("remove_vote", {
     quote_id: reg_no,
     increment_num: 1,
   });
-  let tmp = session?.user
+  let tmp = session?.user;
   console.log(tmp.email)
   const { data2, error2 } = await _supabase.rpc("deletefromvotes", {
     user_email: tmp.email,
@@ -69,15 +119,20 @@ async function remove_votes(reg_no) {
 }
 
 async function update_votes(reg_no) {
-  if (session?.user['aud'] == 'authenticated') {
+  if (!session) {
+    alert("Sign in to vote first!");
+    return;
+  }
+  const { data:data3, error3 } = await _supabase.rpc("getvote", {
+    email_id: session.user.email
+  });
 
+  if (session?.user['aud'] == 'authenticated') {
     let temp = session?.user
-    const { data:data4, error4 } = await _supabase
-  .from('votes')
-  .select('email')
-  let j = 0
-  console.log(data4)
-  for (let i in data4){
+    const { data:data4, error4 } = await _supabase.from('votes').select('email');
+    let j = 0
+    console.log(data4)
+    for (let i in data4){
     console.log(i)
     if (data4[i].email == temp.email) {
        j = 1
@@ -92,18 +147,17 @@ async function update_votes(reg_no) {
     const { data1, error1 } = await _supabase.rpc("votetable", {
       email: temp.email,
       regno: reg_no,
-    }); }else{
-      alert("You already voted")
+    }); 
+    }
+    else {
+      alert("You already voted");
     }
 
-  }
-  else {
-    alert("Sign in to vote first!");
   }
 }
 
 async function getData() {
-  const { data, error } = await _supabase.from("participants").select();
+  const { data, error } = await _supabase.from("participants").select().order("votes", { ascending: false });
   console.log(data);
   var name = [];
   var insta_id = [];
@@ -131,10 +185,6 @@ async function displayImage() {
 
 displayImage();
 
-const {
-  data: { session },
-} = await _supabase.auth.getSession()
-
 const handle = session => {
   // do whatever you want to do when auth state changes
  // For login, maybe you want to set navbar profile name
@@ -152,6 +202,7 @@ const handle = session => {
 }
 
 handle(session)
+restrictVote();
 
 async function signout() {
   const { error } = await _supabase.auth.signOut() 
@@ -160,10 +211,6 @@ async function signout() {
 };
 
 _supabase.auth.onAuthStateChange((_, session) => handle(session));
-
-
-
-
 
 // console.log(_supabase);
 
