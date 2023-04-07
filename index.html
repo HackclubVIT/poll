@@ -34,8 +34,8 @@
       </a>
       <div class="navbar-links">
         <ul>
-          <button class="btn login" type="submit" id="save"><a href="https://chgbsifxtupobribzviz.supabase.co/auth/v1/authorize?provider=google">Login</a></button>
-          <button class="btn logout" type="submit" id="save" onclick="signout()"><a href="#">Log Out</a></button>
+          <button class="btn login" type="submit" id="save"><a id="authButton" href="https://chgbsifxtupobribzviz.supabase.co/auth/v1/authorize?provider=google">Login</a></button>
+          <button class="btn logout" type="submit" id="save" onclick="signout()"><a id="authButton"href="#">Log Out</a></button>
           <div class="profile">
             <img class="profile-pic" src="" alt="profile-pic">
           </div>
@@ -68,6 +68,7 @@
                 data-regno=""
                 data-voted="0">VOTE
               </button>
+              <p class="show-votes"></p>
             </div>
           </div>
 

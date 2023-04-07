@@ -32,7 +32,7 @@ async function dispData(nameList, instaList, regNoList) {
 }
 
 const { data:data3, error3 } = await _supabase.rpc("getvote", {
-  email_id: session.user.email
+  email_id: session?.user.email
 });
 
 for (let i = 0; i < buttons.length; i++) {
