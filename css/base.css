@@ -156,6 +156,14 @@ img {
   padding: 2%;
 }
 
+
+.vid-player{
+  border-radius: 10px;
+  width: 100%;
+  height: 210px;
+}
+
+
 /* CSS */
 .vote-btn {
   align-items: center;

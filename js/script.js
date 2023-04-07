@@ -6,13 +6,6 @@ const {
 } = await _supabase.auth.getSession()
 
 
-async function insert() {
-  const { data, error } = await _supabase.from("participants").insert([
-    { name: "aadityaa", reg_no: "21BCE1964", insta_id: "._aadi2606._" },
-    { name: "jack", reg_no: "21BCE1504", insta_id: "jack@19" },
-  ]);
-}
-
 let buttons = document.getElementsByClassName("vote-btn");
 
 async function dispData(nameList, instaList, regNoList) {
@@ -158,7 +151,7 @@ async function update_votes(reg_no) {
 
 async function getData() {
   const { data, error } = await _supabase.from("participants").select().order("votes", { ascending: false });
-  console.log(data);
+  console.log(data[0]);
   var name = [];
   var insta_id = [];
   var reg_no = [];
@@ -173,32 +166,16 @@ async function getData() {
 
 getData();
 
-async function displayImage() {
-  const { data } = _supabase.storage.from("pictures").getPublicUrl("pics/2.jpg");
-  for (const url in data) {
-    console.log(data[url]);
-    document.getElementById("img-1").src = data[url];
-  }
-  // const img = document.querySelector("img");
-  // img.src = data
-}
-
-displayImage();
 
 const handle = session => {
-  // do whatever you want to do when auth state changes
- // For login, maybe you want to set navbar profile name
- // For logout you wanna remove it maybe, here I'll just console log
  if(session?.user['aud'] == 'authenticated'){
   const pic = document.getElementsByClassName('profile-pic')[0]
   pic.setAttribute('src', session?.user['identities'][0]['identity_data']['avatar_url'])
   document.getElementsByClassName('login')[0].remove()
-  console.log(session?.user);
  }else {
   document.getElementsByClassName('profile')[0].remove()
   document.getElementsByClassName('logout')[0].remove()
  }
-
 }
 
 handle(session)
@@ -212,33 +189,55 @@ async function signout() {
 
 _supabase.auth.onAuthStateChange((_, session) => handle(session));
 
-// console.log(_supabase);
-
-// async function downloadPic() {
-//   const { data, error } = await _supabase.storage
-//     .from("public/pictures")
-//     .download("pics/1.jpg");
-//   console.log(data);
-// }
-
-// // document.createElement(img)
-
-// function displayImage(src, width, height) {
-//   var img = document.createElement("img");
-//   img.src = src;
-//   img.width = width;
-//   img.height = height;
-//   document.body.appendChild(img);
-// }
-
-// downloadPic();
-// // displayImage()
-
-// async function getDetailsOfBucket() {
-//   const { data, error } = await _supabase.storage.from("pictures").list("pics");
-//   console.log(data);
-// }
-
-// getDetailsOfBucket();
 
 window.signout = signout;
+
+async function create_carousel() {
+  
+  return carousel_item
+}
+
+async function set_pic() {
+  //Since the id is same as the img folder number it is used as a reference to load the images
+  //this object is to know how many images does each participant have
+  let no_of_img = {
+    '1':4,//participant with id - 1 has 4 images
+    '2':3,
+    '3':5,
+    '4':3,
+    '5':7,
+    '6':3,
+    '7':1
+  }
+
+  const { data, error } = await _supabase.from("participants").select().order("votes", { ascending: false });//gets the list of participants
+  const img_holder = document.getElementsByClassName('carousel-inner');
+  for(let i=0; i<img_holder.length; i++) {
+    if(data[i].id == 8) { // For the participant who uploaded vedio
+      const wrapper = document.createElement('div')
+      wrapper.className = 'image-wrapper'
+      const vid = document.createElement('iframe')
+      vid.setAttribute('src', "https://drive.google.com/file/d/1XW59dGySE5_E0q1QzY2v2f-jmmy56daY/preview")
+      vid.setAttribute('allow', 'autoplay')
+      vid.className = 'vid-player'
+      img_holder[i].parentElement.parentElement.insertBefore(vid, img_holder[i].parentElement.parentElement.firstChild) //gets the parent element that is the card and sets a firt child
+    }
+    else {
+      for(let j=0; j<no_of_img[data[i].id]; j++) { //loops through all the dom elements with carousel-innr class name
+        const carousel_item = document.createElement('div') //creates a carousel div
+        var clasname = "carousel-item image-wrapper" //adds the class to it
+        if(j == 0) { // adds the active class to only the first image in carousel
+          clasname += ' active'
+        }
+        carousel_item.className = clasname
+        const img = document.createElement('img')
+        let source = 'images/' + (data[i].id).toString() + '/' + (j+1).toString() + '.jpg' //defines the path to image
+        img.setAttribute('src', source)
+        carousel_item.appendChild(img)
+        img_holder[i].appendChild(carousel_item) //adds the dom element to the html tree
+      }
+    }
+    }  
+}
+
+set_pic()
