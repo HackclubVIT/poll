@@ -1,0 +1,36 @@
+@import url("https://fonts.googleapis.com/css2?family=Lexend:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
+body {
+    background-color: #fca311;
+    font-family: "Lexend";
+}
+
+h1 {
+    text-align: center;
+}
+
+.container {
+    background-color: #14213d;
+    margin: 0 12% 2% 12%;
+    color: #FFF;
+    padding: 2%;
+    font-size: 25px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: row;
+}
+
+.name {
+    width: 70%;
+}
+
+.totalVotes {
+    width: 30%;
+    margin-left: 50%;
+}
+
+@media screen and (max-width: 768px) {
+    .container {
+        font-size: 13px;
+    }
+}
