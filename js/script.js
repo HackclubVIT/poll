@@ -32,7 +32,7 @@ async function dispData(nameList, instaList, regNoList) {
 }
 
 const { data:data3, error3 } = await _supabase.rpc("getvote", {
-  email_id: session.user.email
+  email_id: session?.user.email
 });
 
 for (let i = 0; i < buttons.length; i++) {
@@ -103,7 +103,7 @@ async function remove_votes(reg_no) {
     increment_num: 1,
   });
   let tmp = session?.user;
-  console.log(tmp.email)
+  // console.log(tmp.email)
   const { data2, error2 } = await _supabase.rpc("deletefromvotes", {
     user_email: tmp.email,
     regno: reg_no,
@@ -124,9 +124,9 @@ async function update_votes(reg_no) {
     let temp = session?.user
     const { data:data4, error4 } = await _supabase.from('votes').select('email');
     let j = 0
-    console.log(data4)
+    // console.log(data4)
     for (let i in data4){
-    console.log(i)
+    // console.log(i)
     if (data4[i].email == temp.email) {
        j = 1
     }
@@ -151,7 +151,7 @@ async function update_votes(reg_no) {
 
 async function getData() {
   const { data, error } = await _supabase.from("participants").select().order("votes", { ascending: false });
-  console.log(data[0]);
+  // console.log(data[0]);
   var name = [];
   var insta_id = [];
   var reg_no = [];
@@ -160,7 +160,7 @@ async function getData() {
     insta_id.push(data[ele]["insta_id"]);
     reg_no.push(data[ele]["reg_no"]);
   }
-  console.log(name);
+  // console.log(name);
   dispData(name, insta_id, reg_no);
 }
 
@@ -183,7 +183,7 @@ restrictVote();
 
 async function signout() {
   const { error } = await _supabase.auth.signOut() 
-  console.log(error)
+  // console.log(error)
   location.reload();
 };
 
